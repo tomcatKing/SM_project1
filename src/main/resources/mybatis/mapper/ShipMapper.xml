@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.ShipMapper">
+  <resultMap id="shippingResult" type="com.wx.pojo.Shipping">
+    <id column="shipping_id" jdbcType="SMALLINT" property="shipping_id" />
+    <result column="open_id" jdbcType="VARCHAR" property="open_id"/>
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiver_name" />
+    <result column="receiver_phone" jdbcType="VARCHAR" property="receiver_phone" />
+    <result column="receiver_province" jdbcType="VARCHAR" property="receiver_province" />
+    <result column="receiver_city" jdbcType="VARCHAR" property="receiver_city" />
+    <result column="receiver_district" jdbcType="VARCHAR" property="receiver_district" />
+    <result column="receiver_address" jdbcType="VARCHAR" property="receiver_address"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+   shipping_id,
+   receiver_name,
+   receiver_phone,
+   receiver_province,
+   receiver_city,
+   receiver_district,
+   receiver_address,
+   create_time,
+   update_time
+  </sql>
+  
+  <sql id="Basic_Column_List">
+  	shipping_id,
+  	receiver_name,
+  	receiver_phone,
+  	receiver_province,
+  	receiver_city,
+  	receiver_district,
+  	receiver_address
+  </sql>
+  
+  <!-- 添加收货地址 -->
+  <insert id="insertShip" parameterType="com.wx.pojo.Shipping">
+  	insert cart(open_id,
+  		receiver_name,
+  		receiver_phone,
+  		receiver_province,
+  		receiver_city,
+  		receiver_district,
+  		receiver_address,
+  		create_time,
+  		update_time)
+  	values(
+  		#{open_id},
+  		#{receiver_name},
+  		#{receiver_phone},
+  		#{receiver_province},
+  		#{receiver_city},
+  		#{receiver_district},
+  		#{receiver_address},
+  		now(),
+  		now())
+  </insert>
+  
+  <!-- 获取用户的的所有收货地址 -->
+  <select id="getShips" parameterType="string" resultMap="shippingResult">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from shipping 
+  	where open_id=#{open_id}
+  </select>
+  
+  <!-- 获取指定的收货地址 -->
+  <select id="getShip" parameterType="int" resultMap="shippingResult">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from shipping 
+  	where shipping_id=#{shipping_id}
+  </select>
+  
+  <select id="selectShips" parameterType="string" resultType="int">
+  	select count(1) from shipping where open_id=#{open_id}
+  </select>
+  
+  <!-- 判断用户是否存在这个订单 -->
+  <select id="selectShip" parameterType="map" resultType="int">
+  	select count(1)
+  	from shipping
+  	where open_id=#{open_id} and shipping_id=#{shipping_id}
+  </select>
+  
+  <!-- 删除用户的指定订单 -->
+  <delete id="deleteShip" parameterType="map">
+  	delete from shipping
+  	where shipping_id=#{shipping_id} and open_id=#{open_id}
+  </delete>
+  
+  <!-- 根据条件更新购物车 -->
+  <update id="updateShip" parameterType="com.wx.pojo.Shipping" >
+    update shipping
+    <set>
+      <if test="receiver_name != null" >
+        receiver_name = #{receiver_name},
+      </if>
+      <if test="receiver_phone != null" >
+        receiver_phone = #{receiver_phone},
+      </if>
+      <if test="receiver_province!=null">
+      	receiver_province =#{receiver_province},
+      </if>
+      <if test="receiver_city!=null">
+      	receiver_city=#{receiver_city},
+      </if>
+      <if test="receiver_district!=null">
+      	receiver_district=#{receiver_district},
+      </if>
+      <if test="receiver_address!=null">
+      	receiver_address=#{receiver_address},
+      </if>
+        update_time =now()
+    </set>
+    where shipping_id = #{shipping_id}
+  </update>
+</mapper>
