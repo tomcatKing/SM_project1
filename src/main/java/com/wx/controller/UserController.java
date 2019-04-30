@@ -1,6 +1,7 @@
 package com.wx.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +37,19 @@ public class UserController {
 		return jsonResult;
 	}
 	
+	@GetMapping("/info")
+	public JsonResult info(String code) {
+		log.info("获取当前小程序用户信息!!code-->"+code);
+		WxSessionModel wxSession=userService.getSessionAndOpen(code);
+		String open_id=wxSession.getOpenid();
+		
+		String result=redis.get(Basic.WX_SESSION_PREFIX+open_id);
+		if(result==null || result==null) {
+			return JsonResult.errorMsg("当前用户信息已过期");
+		}else {
+			return JsonResult.ok();
+		}
+	}
 	
+	//判断open_id是否存在redis中,如果存在直接返回ok,否则返回过期
 }

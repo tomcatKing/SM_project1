@@ -4,6 +4,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import com.wx.service.IUserService;
 import com.wx.util.BigDecimalUtil;
 import com.wx.util.Const;
 import com.wx.util.DateTimeUtil;
+import com.wx.util.DateUtil;
 import com.wx.util.FTPUtil;
 import com.wx.util.PropertiesUtil;
 import com.wx.vo.OrderItemVo;
@@ -445,6 +447,7 @@ public class OrderServiceImpl implements IOrderService {
                 	folder.setWritable(true);
                 	folder.mkdirs();
                 }
+                
                 //生成结果为.../upload/返回订单号.png
                 String qrPath=String.format(path+"/qr-%s.png", response.getOutTradeNo());
                 String qrFileName=String.format("qr-%s.png",response.getOutTradeNo());
@@ -548,6 +551,19 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public void updateOrderStatus(Long orderNo, Integer OrderStatus) {
 		orderMapper.updateOrderStatus(orderNo, OrderStatus);
+	}
+
+	@Override
+	public void closeOrder() {
+		//1.获取所有未支付订单
+		List<Order> orderList=orderMapper.selectOrdersIsNoPay(Const.OrderStatusEnum.NO_PAY.getCode());
+		Date now=new Date();
+		for(Order orderItem:orderList) {
+			if(DateUtil.dateAnddateIsTrue(orderItem.getCreate_time().getTime(), now.getTime())) {
+				orderMapper.updateOrderStatus(orderItem.getOrder_no(), Const.OrderStatusEnum.CANCELED.getCode());
+			}
+		}
+		
 	}
 
 }

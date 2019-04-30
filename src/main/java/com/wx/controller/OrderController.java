@@ -119,7 +119,7 @@ public class OrderController {
 		//支付宝官方提示:必须移除sign_type和sign,默认移除了sign,手动移除sign_type
 		params.remove("sign_type"); //charset默认为"utf-8"
 		try {
-			boolean alipayRSACheckedV2=AlipaySignature.rsaCheckV2(params, Configs.getPublicKey(), "utf-8", Configs.getSignType());
+			boolean alipayRSACheckedV2=AlipaySignature.rsaCheckV2(params, Configs.getAlipayPublicKey(), "utf-8", Configs.getSignType());
 			if(!alipayRSACheckedV2) {
 				log.info("支付宝验签失败!!");
 				return JsonResult.errorMsg("非法请求,验证不通过!!");
@@ -141,7 +141,7 @@ public class OrderController {
 		return Const.AlipayCallback.RESPONSE_FAILED;
 	}
 	
-	@RequestMapping("queryOrderPayStatus")
+	@RequestMapping("/queryOrderPayStatus")
 	//获取订单支付状态
 	public JsonResult queryOrderPayStatus(String code,Long order_no) {
 		log.info("小程序用户查询订单状态,order_no->"+order_no);

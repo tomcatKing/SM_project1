@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.assertj.core.util.Lists;
 
 import lombok.extern.log4j.Log4j;
 
@@ -35,6 +36,7 @@ public class FTPUtil {
 		boolean result = false;
 		try {
 			result = ftpUtil.uploadFile("img", fileList);
+			
 		} catch (IOException e) {
 			log.error("上传文件异常==>FTPUtil.static_uploadFile",e);
 			e.printStackTrace();
@@ -129,4 +131,11 @@ public class FTPUtil {
 		this.ftpClient = ftpClient;
 	}
 	
+	
+	public static void main(String[] args) {
+		List<File> fileList=Lists.newArrayList();
+		File file=new File("D:\\JavaShizhan\\wechat\\pom.xml");
+		fileList.add(file);
+		uploadFile(fileList);
+	}
 }

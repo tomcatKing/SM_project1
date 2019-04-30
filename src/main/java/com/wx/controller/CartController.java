@@ -75,6 +75,7 @@ public class CartController {
 	public JsonResult delCart(
 			String code,
 			String food_ids) {
+		
 		log.info("小程序用户删除购物车,food_ids->"+food_ids);
 		//1,2,3...如果用户只传入了1个1
 		if(!food_ids.contains(",")) {

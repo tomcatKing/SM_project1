@@ -32,4 +32,7 @@ public interface OrderMapper {
 	//修改订单状态
 	void updateOrderStatus(Long orderNo, Integer orderStatus);
 	
+	//获取未支付订单
+	List<Order> selectOrdersIsNoPay(int code);
+	
 }

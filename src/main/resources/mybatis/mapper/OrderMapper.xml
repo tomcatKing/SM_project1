@@ -122,4 +122,12 @@
   	SET status=#{status}
  	WHERE order_no=#{order_no} 	
   </update>
+  
+  <!-- 获取所有未支付订单 -->
+  <select id="selectOrdersIsNoPay" parameterType="int">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from `order`
+  	where status=#{statusa}
+  </select>
 </mapper>

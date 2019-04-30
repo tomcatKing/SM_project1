@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wx.common.JsonResult;
-import com.wx.common.RedisOperator;
 import com.wx.mapper.ShipMapper;
-import com.wx.mapper.UserMapper;
 import com.wx.model.WxSessionModel;
 import com.wx.pojo.Shipping;
 import com.wx.service.IShopService;
@@ -24,12 +22,6 @@ import lombok.extern.log4j.Log4j;
 public class ShopServiceImpl implements IShopService{
 	@Autowired
 	private IUserService iUserService;
-	
-	@Autowired
-	private RedisOperator redis;
-	
-	@Autowired
-	private UserMapper userMapper;
 	
 	@Autowired
 	private ShipMapper shipMapper;

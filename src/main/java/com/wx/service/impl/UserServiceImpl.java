@@ -64,7 +64,7 @@ public class UserServiceImpl implements IUserService {
 			log.info("数据库中没有这个用户的信息");
 			return JsonResult.errorTokenMsg("用户信息已过期,请重新授权");
 		}
-		return	 JsonResult.ok(wxSession);
+		return JsonResult.ok(wxSession);
 	}
 
 	@Override

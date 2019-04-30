@@ -23,4 +23,7 @@ public interface IOrderService {
 	
 	//查询用户的订单是否存在
 	JsonResult queryOrderPayStatus(String code,Long orderNo);
+	
+	//关闭订单操作
+	void closeOrder();
 }

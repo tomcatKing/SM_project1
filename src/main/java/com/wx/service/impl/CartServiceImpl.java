@@ -31,11 +31,6 @@ public class CartServiceImpl implements ICartService {
 	@Autowired
 	private IUserService iUserService;
 	
-	@Autowired
-	private UserMapper userMapper;
-	
-	@Autowired
-	private RedisOperator redis;
 	
 	@Autowired
 	private CartMapper cartMapper;
@@ -50,10 +45,6 @@ public class CartServiceImpl implements ICartService {
 			return JsonResult.errorMsg("参数传入异常");
 		}
 		JsonResult jsonResult=iUserService.getUserId(code);
-		if(!jsonResult.isOK()) {
-			log.info("      当前用户不存在        ");
-			return jsonResult;
-		}
 		WxSessionModel wxSessionModel=(WxSessionModel) jsonResult.getData();
 		String open_id=wxSessionModel.getOpenid();
 		

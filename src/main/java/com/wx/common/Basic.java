@@ -11,4 +11,6 @@ public class Basic {
 	public static final String WX_GRANT_TYPE="authorization_code";
 	
 	public static final String WX_SESSION_PREFIX="user-redis-session:";
+	//10天有效期
+	public static final int USER_TIME=10*24*3600;
 }
