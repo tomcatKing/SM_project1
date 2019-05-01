@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.OrderItemMapper">
+  <resultMap id="BaseResultMap" type="com.wx.pojo.OrderItem">
+    <id column="order_item_id" jdbcType="SMALLINT" property="order_item_id" />
+    <result column="open_id" jdbcType="VARCHAR" property="open_id"/>
+    <result column="order_no" jdbcType="BIGINT" property="order_no" />
+    <result column="food_id" jdbcType="SMALLINT" property="food_id" />
+    <result column="food_name" jdbcType="VARCHAR" property="food_name"/>
+    <result column="food_img" jdbcType="VARCHAR" property="food_img"/>
+    <result column="food_price" jdbcType="DECIMAL" property="food_price" />
+    <result column="food_num" jdbcType="SMALLINT" property="food_num" />
+    <result column="total_price" jdbcType="DECIMAL" property="total_price" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    order_item_id, open_id,order_no,food_id,food_name, food_img,food_price,food_num,total_price,create_time,update_time
+  </sql>
+  
+  <!-- 简单的数据 -->
+  <sql id="Basic_Column_List">
+  	order_item_id, open_id,order_no,food_id,food_name, food_img,food_num,food_price,total_price
+  </sql>
+  
+  <!-- 插入订单明细 -->
+  <insert id="insert" parameterType="com.wx.pojo.OrderItem" >
+  	insert
+  	order_item(open_id,order_no,food_id,food_name,food_img,food_price,food_num,total_price,create_time,update_time)
+  	values(#{open_id},#{order_no},#{food_id},#{food_name},#{food_img},#{food_price},#{food_num},#{total_price},now(),now())
+  </insert>
+  
+  <!--添加多个订单明细--> 
+  <insert id="batchInsert" parameterType="list">
+  	 insert into order_item (open_id, order_no, 
+      food_id, food_name, food_img, 
+      food_price, food_num, total_price, 
+      create_time, update_time)
+    values 
+    <foreach collection="orderItemList" index="index" item="item" separator=",">
+    	(#{item.open_id},#{item.order_no},#{item.food_id},#{item.food_name},#{item.food_img},#{item.food_price}
+    	,#{item.food_num},#{item.total_price},now(),now())
+    </foreach>
+  </insert>
+  
+  <!-- 通过订单号获取订单明细信息 -->
+  <select id="getOrderItemsByOrderNo" parameterType="long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Basic_Column_List"/>
+  	from 
+  	order_item
+  	where order_no=#{order_no}
+  </select>
+  
+  <!-- 通过订单号和用户id获取订单详情信息 -->
+  <select id="getByOrderNoUserId" parameterType="map" resultMap="BaseResultMap">
+  	SELECT
+  	<include refid="Base_Column_List" />
+  	FROM order_item
+  	<where>
+  		order_no=#{order_no}
+  		<if test="open_id!=null">
+  			and open_id=#{open_id}
+  		</if>
+  	</where>
+  </select>
+</mapper>

@@ -1,0 +1,14 @@
+spring:
+  redis:
+    host: localhost
+    
+#mysql
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url:  jdbc:mysql://localhost:3306/wechat
+    username: root
+    password: 
+    
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

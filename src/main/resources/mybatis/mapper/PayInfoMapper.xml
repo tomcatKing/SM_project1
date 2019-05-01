@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.PayInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wx.pojo.PayInfo">
+    <id column="pay_id" jdbcType="SMALLINT" property="pay_id" />
+    <result column="open_id" jdbcType="VARCHAR" property="open_id"/>
+    <result column="order_no" jdbcType="BIGINT" property="order_no" />
+    <result column="pay_platform" jdbcType="SMALLINT" property="pay_platform" />
+    <result column="platform_number" jdbcType="VARCHAR" property="platform_number"/>
+    <result column="platform_status" jdbcType="VARCHAR" property="platform_status"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    pay_id, open_id,order_no,pay_platform,platform_number, platform_status,create_time,update_time
+  </sql>
+  
+  <insert id="insertSelective" parameterType="com.wx.pojo.PayInfo" >
+    insert into pay_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pay_id != null" >
+        pay_id,
+      </if>
+      <if test="open_id != null" >
+        open_id,
+      </if>
+      <if test="order_no != null" >
+        order_no,
+      </if>
+      <if test="pay_platform != null" >
+        pay_platform,
+      </if>
+      <if test="platform_number != null" >
+        platform_number,
+      </if>
+      <if test="platform_status != null" >
+        platform_status,
+      </if>
+      create_time,update_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pay_id != null" >
+        #{pay_id},
+      </if>
+      <if test="open_id != null" >
+        #{open_id},
+      </if>
+      <if test="order_no != null" >
+        #{order_no},
+      </if>
+      <if test="pay_platform != null" >
+        #{pay_platform},
+      </if>
+      <if test="platform_number != null" >
+        #{platform_number},
+      </if>
+      <if test="platform_status != null" >
+        #{platform_status},
+      </if>
+        now(),
+        now()
+    </trim>
+  </insert>
+</mapper>

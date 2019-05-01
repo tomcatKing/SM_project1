@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.FoodMapper">
+  <resultMap id="BaseResultMap" type="com.wx.pojo.Food">
+    <id column="food_id" jdbcType="SMALLINT" property="food_id" />
+    <result column="food_type" jdbcType="SMALLINT" property="food_type"/>
+    <result column="food_name" jdbcType="VARCHAR" property="food_name" />
+    <result column="food_img" jdbcType="VARCHAR" property="food_img" />
+    <result column="food_detail" jdbcType="VARCHAR" property="food_detail" />
+    <result column="food_price" jdbcType="DECIMAL" property="food_price" />
+    <result column="food_count" jdbcType="SMALLINT" property="food_count" />
+    <result column="food_status" jdbcType="SMALLINT" property="food_status"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    food_id, food_type, food_name, food_img, food_detail, food_price, food_count, food_status, create_time, 
+    update_time
+  </sql>
+  
+  <sql id="detail_column_list">
+  	food_id, food_type, food_name, food_img, food_detail, food_price, food_count
+  </sql>
+  
+  <sql id="Basic_Column_List">
+  	food_id,food_name,food_img,food_price,food_count
+  </sql>
+  
+  <!--获取所有的食物并排序-->
+  <select id="getFoods" resultMap="BaseResultMap" parameterType="map">
+  	select 
+  	<include refid="Basic_Column_List"/>
+  	from food
+  	where food_status=1 
+  	order by ${orderBy} asc
+  </select>
+  
+  <!-- 通过关键字和类型获取指定的食物 -->
+  <select id="getFoodListByKeyWordAndType" resultMap="BaseResultMap" parameterType="map">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from food
+  	where food_type=#{type} 
+  	and food_name like #{keyword}
+  	and food_status=1 
+  	order by ${orderBy} asc
+  </select>
+  
+  <!-- 获取指定分类的食物并排序 -->
+  <select id="getFoodListByType" resultMap="BaseResultMap" parameterType="map">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from food
+  	where food_type=#{type}
+  	and food_status=1 
+  	order by ${orderBy} asc
+  </select>
+  
+  <!-- 只通过关键子获取食物并排序 -->
+  <select id="getFoodListByKeyWord" resultMap="BaseResultMap" parameterType="map">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from food
+  	where food_name like #{keyword}
+  	order by ${orderBy} asc
+  </select>
+  
+  <!--通过食物的主键获取食物的详细信息-->
+  <select id="getFoodById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select
+  	<include refid="detail_column_list"/>
+  	from food
+  	where food_id=#{food_id}
+  </select>
+</mapper>

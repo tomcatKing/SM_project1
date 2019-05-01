@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.CartMapper">
+  <resultMap id="BaseResultMap" type="com.wx.pojo.Cart">
+    <id column="cart_id" jdbcType="SMALLINT" property="cart_id" />
+    <result column="open_id" jdbcType="VARCHAR" property="open_id"/>
+    <result column="food_id" jdbcType="SMALLINT" property="food_id" />
+    <result column="food_num" jdbcType="SMALLINT" property="food_num" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    cart_id, open_id,food_id,food_num,create_time, update_time
+  </sql>
+  
+  <!-- 简单的数据 -->
+  <sql id="Basic_Column_List">
+  	cart_id,food_id,food_num
+  </sql>
+  
+  <!-- 插入数据到购物车 -->
+  <insert id="insertCart" parameterType="map" >
+  	insert
+  	cart(open_id,food_id,food_num,create_time,update_time)
+  	values(#{open_id},#{food_id},#{food_num},now(),now())
+  </insert> 
+  
+  <!-- 通过用户的open_id和商品的id获取购物车 -->
+  <select id="getCartByFoodIdAndOpenId" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Basic_Column_List"/>
+  	from cart
+  	where open_id=#{open_id} and food_id=#{food_id}
+  </select>
+  
+  <!-- 根据条件更新购物车 -->
+  <update id="updateCartBySelect" parameterType="com.wx.pojo.Cart" >
+    update cart
+    <set>
+      <if test="food_num != null" >
+        food_num = #{food_num},
+      </if>
+        update_time =now()
+    </set>
+    where cart_id = #{cart_id}
+  </update>
+  
+  <!--通过用户的open_id获取用户的所有购物车信息-->
+  <select id="getCartsByOpenId" parameterType="string" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Basic_Column_List"/>
+  	from cart
+  	where open_id=#{open_id}
+  </select>
+  
+  <!--判断这个用户是否存在这个订单,防止横向越权 -->
+  <select id="getCartByOpenIdAndCartId" parameterType="map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from cart
+  	where open_id=#{open_id} 
+  	and cart_id=#{cart_id}
+  </select>
+  
+  <!-- 根据购物车的id删除购物车 -->
+  <delete id="deleteCart" parameterType="int">
+  	delete
+  	from
+  	cart
+  	where cart_id=#{cart_id}
+  </delete>
+  
+  <!-- 获取多个指定的购物车 -->
+  <select id="getCartByOpenIdAndCartIds" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Basic_Column_List"/>
+  	from 
+  	cart
+  	<where>
+  		<if test="cart_ids!=null">
+  			<foreach collection="cart_ids" item="item_id" open="cart_id in (" close=")" separator=",">
+  				#{item_id}
+  			</foreach>
+  		</if>
+  	</where>
+  </select>
+</mapper>

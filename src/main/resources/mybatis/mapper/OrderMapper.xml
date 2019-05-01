@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.wx.pojo.Order">
+    <id column="order_id" jdbcType="SMALLINT" property="order_id" />
+    <result column="open_id" jdbcType="VARCHAR" property="open_id"/>
+    <result column="order_no" jdbcType="BIGINT" property="order_no" />
+    <result column="shipping_id" jdbcType="SMALLINT" property="shipping_id"/>
+    <result column="payment" jdbcType="DECIMAL" property="payment" />
+    <result column="payment_type" jdbcType="SMALLINT" property="payment_type" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="order_desc" jdbcType="VARCHAR" property="order_desc"/>
+    <result column="payment_time" jdbcType="TIMESTAMP" property="payment_time" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="send_time" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="close_time" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    order_id, open_id,order_no,shipping_id,payment,payment_type,status, order_desc,payment_time,send_time,end_time,create_time,update_time
+  </sql>
+  
+  <!-- 简单的数据 -->
+  <sql id="Basic_Column_List">
+  	order_id, open_id,order_no,shipping_id,payment,payment_type,status, order_desc,payment_time,send_time,end_time,create_time
+  </sql>
+  
+  <!-- 插入数据到购物车 -->
+  <insert id="insert" parameterType="com.wx.pojo.Order" >
+  	insert
+  	`order`(open_id,order_no,shipping_id,payment,payment_type,status,order_desc,payment_time,send_time,end_time,close_time,create_time,update_time)
+  	values(#{open_id},#{order_no},#{shipping_id},#{payment},#{payment_type},#{status},#{order_desc},
+  		#{payment_time},#{send_time},#{end_time},#{close_time},now(),now())
+  </insert> 
+  
+  <!-- 通过订单编号和用户的主键获取订单 -->
+  <select id="selectOrderByOpenIdAndOrderNo" parameterType="map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from `order`
+  	where order_no=#{order_no} and open_id=#{open_id}
+  </select>
+  
+  <!-- 根据条件更新订单 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.wx.pojo.Order" >
+    update `order`
+    <set >
+      <if test="order_no != null" >
+        order_no = #{order_no},
+      </if>
+      <if test="open_id != null" >
+        open_id = #{open_id},
+      </if>
+      <if test="shipping_id != null" >
+        shipping_id = #{shipping_id},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment},
+      </if>
+      <if test="payment_type != null" >
+        payment_type = #{payment_type},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="order_desc != null" >
+        order_desc = #{order_desc},
+      </if>
+      <if test="payment_time != null" >
+        payment_time = #{payment_time},
+      </if>
+      <if test="close_time != null" >
+        close_time = #{close_time},
+      </if>
+      <if test="close_time != null" >
+        send_time = #{close_time},
+      </if>
+      <if test="end_time != null" >
+        end_time = #{end_time},
+      </if>
+      update_time=now()
+    </set>
+    where order_id = #{order_id}
+  </update>
+  
+  <!-- 通过订单编号获取订单的详细信息 -->
+  <select id="selectOrderByOrderNo" parameterType="long" resultMap="BaseResultMap">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from 
+  	`order`
+  	where order_no=#{order_no}
+  </select>
+  
+  <!-- 获取用户的指定类型的订单 -->
+  <select id="list" parameterType="string" resultMap="BaseResultMap">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from 
+  	`order`
+  	<where>
+  		<if test="type!=null">
+  			and status=#{type}
+  		</if>
+  		and open_id=#{open_id}
+  	</where>
+  </select>
+  
+  <!-- 获取订单信息,根据订单no和用户id -->
+  <select id="selectByUserIdAndOrderNo" parameterType="map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from `order`
+  	where order_no=#{order_no} and open_id=#{open_id}
+  </select>
+  
+  <!-- 修改订单状态 -->
+  <update id="updateOrderStatus" parameterType="map">
+  	UPDATE `order`
+  	SET status=#{status}
+ 	WHERE order_no=#{order_no} 	
+  </update>
+  
+  <!-- 获取所有未支付订单 -->
+  <select id="selectOrdersIsNoPay" parameterType="int">
+  	select
+  	<include refid="Basic_Column_List"/>
+  	from `order`
+  	where status=#{statusa}
+  </select>
+</mapper>
